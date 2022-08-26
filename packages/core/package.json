@@ -6,6 +6,13 @@
   "browser": "dist/index.umd.js",
   "module": "dist/index.esm.js",
   "source": "src/index.ts",
+  "scripts": {
+    "dev": "node ./../../scripts/dev.js core -w -d",
+    "build": "node ./../../scripts/dev.js core -p"
+  },
+  "buildOptions": {
+
+  },
   "keywords": [],
   "author": "",
   "license": "ISC"

@@ -1,7 +1,9 @@
 const { targets } = require('./utils')
-const { resolve, relative } = require('path')
+const { resolve: _resolve, relative } = require('path')
 const fs = require('fs-extra')
 const args = require('minimist')(process.argv.slice(2));
+
+const resolve = (path) => _resolve(__dirname, path)
 
 
 (async () => {
@@ -16,44 +18,37 @@ const args = require('minimist')(process.argv.slice(2));
   const sourceMap = args.sourcemap || args.s
   const isRelease = args.release
   const buildTypes = args.t || args.types || isRelease
+  const watch = args.w || args.watch
 
-  const pkg = require(resolve(__dirname, `../packages/${target}/package.json`))
+  const pkg = require(resolve(`../packages/${target}/package.json`))
 
   const { format = 'cjs' } = pkg.buildOptions || {}
 
   const outfile = resolve(
-    __dirname,
     `../packages/${target}/dist/${target}.${format}.js`.replace(/cjs./, '')
   )
 
+  await start(target)
 
-  const relativeOutfile = relative(process.cwd(), outfile)
-
-  console.log({
-    outfile, relativeOutfile,
-  })
-
-
-  start(target)
-
-  function start(target) {
-    const pkgDir = resolve(`packages/${target}`)
+  async function start(target) {
+    const pkgDir = resolve(`../packages/${target}`)
     const pkg = require(`${pkgDir}/package.json`)
-
 
     const env =
       (pkg.buildOptions?.env) ||
       (devOnly ? 'development' : 'production')
 
-    console.log(
+    await execa(
       'rollup',
       [
-        '-c',
+        `-c${watch ? 'w' : ''}`,
+        `--config ${resolve(__dirname, './../rollup.config.ts')}`,
         '--environment',
         [
           `COMMIT:${commit}`,
           `NODE_ENV:${env}`,
           `TARGET:${target}`,
+          `OUTFILE:${outfile}`,
           formats ? `FORMATS:${formats}` : ``,
           buildTypes ? `TYPES:true` : ``,
           prodOnly ? `PROD_ONLY:true` : ``,
