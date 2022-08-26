@@ -1,0 +1,12 @@
+{
+  "name": "@lazy-swiper/core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "browser": "dist/index.umd.js",
+  "module": "dist/index.esm.js",
+  "source": "src/index.ts",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
