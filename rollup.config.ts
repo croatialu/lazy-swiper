@@ -1,6 +1,6 @@
 import NodePath from 'path'
 import RollupJson from '@rollup/plugin-json'
-import RollupTypescript from '@rollup/plugin-typescript'
+import RollupTypescript from 'rollup-plugin-typescript2'
 import fs from 'fs'
 
 const resolveFile = path => {
